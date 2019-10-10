@@ -1,9 +1,6 @@
 package com.gildedrose;
 
-import com.gildedrose.strategy.AgedBrieUpdateStrategy;
-import com.gildedrose.strategy.BackStagePassUpdateStrategy;
-import com.gildedrose.strategy.DefaultUpdateStrategy;
-import com.gildedrose.strategy.IUpdateStrategy;
+import com.gildedrose.strategy.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,13 +18,14 @@ class GildedRose {
         updateStrategies = new HashMap<>();
         updateStrategies.put(BRIE, new AgedBrieUpdateStrategy());
         updateStrategies.put(BACKSTAGE_PASS, new BackStagePassUpdateStrategy());
+        updateStrategies.put(SULFURAS, new LegendaryUpdateStrategy());
     }
 
     public void updateQuality() {
         for (int i = 0; i < items.length; i++) {
             Item currentItem = items[i];
 
-            if (BRIE.equals(currentItem.name) || BACKSTAGE_PASS.equals(currentItem.name)) {
+            if (BRIE.equals(currentItem.name) || BACKSTAGE_PASS.equals(currentItem.name) || SULFURAS.equals(currentItem.name)) {
                 updateStrategies.get(currentItem.name)
                         .update(currentItem);
             } else {
