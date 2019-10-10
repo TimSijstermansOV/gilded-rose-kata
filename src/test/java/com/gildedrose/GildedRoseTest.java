@@ -1,15 +1,11 @@
 package com.gildedrose;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
-import java.util.Arrays;
+import static com.gildedrose.GildedRose.*;
+import static org.junit.Assert.assertEquals;
 
 public class GildedRoseTest {
-    private String SULFURAS = "Sulfuras, Hand of Ragnaros";
-    private String BRIE = "Aged Brie";
-    private String BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert";
 
     // Default cases
     @Test
@@ -83,6 +79,7 @@ public class GildedRoseTest {
         assertEquals(-1, underTest.items[2].sellIn);
         assertEquals(40, underTest.items[2].quality);
     }
+
     // Backstage pass cases
     @Test
     public void backstagePass_QualityIncreasesByOne_WhenSellInAboveTen() {
