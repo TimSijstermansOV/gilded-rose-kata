@@ -20,5 +20,6 @@ public class BackStagePassUpdateStrategy implements IUpdateStrategy {
         if (item.quality > 50) {
             item.quality = 50;
         }
+        item.sellIn -= 1;
     }
 }

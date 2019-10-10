@@ -9,18 +9,33 @@ public class GildedRoseTest {
 
     // Default cases
     @Test
-    public void default_DecreasesAllNormally_WhenNotExpired() {
+    public void default_QualityDecreasesNormally_WhenNotExpired() {
         GildedRose underTest = createGildedRoseWithItems(
                 new Item("someItem", 5, 10));
 
         underTest.updateQuality();
 
-        assertEquals(4, underTest.items[0].sellIn);
         assertEquals(9, underTest.items[0].quality);
     }
 
     @Test
-    public void default_DecreasesInQualityByTwo_WhenExpired() {
+    public void allNonLegendary_SellInDecreasesByOne_WhenUpdating() {
+        GildedRose underTest = createGildedRoseWithItems(
+                new Item("someItem", 5, 10),
+                new Item(BRIE, 5, 10),
+                new Item(BACKSTAGE_PASS, 5, 10),
+                new Item("Conjured Sword", 5, 10));
+
+        underTest.updateQuality();
+
+        assertEquals(4, underTest.items[0].sellIn);
+        assertEquals(4, underTest.items[1].sellIn);
+        assertEquals(4, underTest.items[2].sellIn);
+        assertEquals(4, underTest.items[3].sellIn);
+    }
+
+    @Test
+    public void default_QualityDecreasesByTwo_WhenExpired() {
         GildedRose underTest = createGildedRoseWithItems(
                 new Item("someItem", -1, 10));
 
@@ -136,7 +151,37 @@ public class GildedRoseTest {
     }
 
     // Conjured item cases
+    @Test
+    public void conjuredItem_QualityDecreasesByTwo_WhenSellInAboveZero() {
+        GildedRose underTest = createGildedRoseWithItems(
+                new Item("Conjured Sword", 5, 30));
 
+        underTest.updateQuality();
+
+        assertEquals(28, underTest.items[0].quality);
+    }
+
+    @Test
+    public void conjuredItem_QualityDecreasesByFour_WhenSellInBelowZero() {
+        GildedRose underTest = createGildedRoseWithItems(
+                new Item("Conjured Sword", -1, 30));
+
+        underTest.updateQuality();
+
+        assertEquals(26, underTest.items[0].quality);
+    }
+
+    @Test
+    public void conjuredItem_QualityDoesNotDecreaseBelowZero_WhenUpdating() {
+        GildedRose underTest = createGildedRoseWithItems(
+                new Item("Conjured Sword", 5, 1),
+                new Item("Conjured Sword", -1, 3));
+
+        underTest.updateQuality();
+
+        assertEquals(0, underTest.items[0].quality);
+        assertEquals(0, underTest.items[1].quality);
+    }
 
     // Util
     private GildedRose createGildedRoseWithItems(Item... items) {
