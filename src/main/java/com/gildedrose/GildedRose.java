@@ -6,12 +6,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 class GildedRose {
-    Item[] items;
-    private Map<String, IUpdateStrategy> updateStrategies;
 
     public static final String SULFURAS = "Sulfuras, Hand of Ragnaros";
     public static final String BRIE = "Aged Brie";
     public static final String BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert";
+    public static final String CONJURED = "Conjured";
+
+    Item[] items;
+    private Map<String, IUpdateStrategy> updateStrategies;
+    private DefaultUpdateStrategy defaultStrategy = new DefaultUpdateStrategy();
 
     public GildedRose(Item[] items) {
         this.items = items;
@@ -19,68 +22,16 @@ class GildedRose {
         updateStrategies.put(BRIE, new AgedBrieUpdateStrategy());
         updateStrategies.put(BACKSTAGE_PASS, new BackStagePassUpdateStrategy());
         updateStrategies.put(SULFURAS, new LegendaryUpdateStrategy());
+        updateStrategies.put(CONJURED, new ConjuredUpdateStrategy());
     }
 
     public void updateQuality() {
-        for (int i = 0; i < items.length; i++) {
-            Item currentItem = items[i];
-
-            if (BRIE.equals(currentItem.name) || BACKSTAGE_PASS.equals(currentItem.name) || SULFURAS.equals(currentItem.name)) {
-                updateStrategies.get(currentItem.name)
+        for (Item currentItem : items) {
+            if (currentItem.name != null && currentItem.name.contains(CONJURED)) {
+                updateStrategies.get(CONJURED).update(currentItem);
+            } else {
+                updateStrategies.getOrDefault(currentItem.name, defaultStrategy)
                         .update(currentItem);
-            } else {
-                oldUpdateMethod(currentItem);
-            }
-        }
-    }
-
-    private void oldUpdateMethod(Item item) {
-        if (!item.name.equals("Aged Brie")
-                && !item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-            if (item.quality > 0) {
-                if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
-                    item.quality = item.quality - 1;
-                }
-            }
-        } else {
-            if (item.quality < 50) {
-                item.quality = item.quality + 1;
-
-                if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                    if (item.sellIn < 11) {
-                        if (item.quality < 50) {
-                            item.quality = item.quality + 1;
-                        }
-                    }
-
-                    if (item.sellIn < 6) {
-                        if (item.quality < 50) {
-                            item.quality = item.quality + 1;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
-            item.sellIn = item.sellIn - 1;
-        }
-
-        if (item.sellIn < 0) {
-            if (!item.name.equals("Aged Brie")) {
-                if (!item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                    if (item.quality > 0) {
-                        if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
-                            item.quality = item.quality - 1;
-                        }
-                    }
-                } else {
-                    item.quality = item.quality - item.quality;
-                }
-            } else {
-                if (item.quality < 50) {
-                    item.quality = item.quality + 1;
-                }
             }
         }
     }

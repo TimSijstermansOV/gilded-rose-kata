@@ -5,8 +5,9 @@ import com.gildedrose.Item;
 public class BackStagePassUpdateStrategy implements IUpdateStrategy {
     @Override
     public void update(Item item) {
-        if (item.sellIn <= 0) {
+        if (item.sellIn < 0) {
             item.quality = 0;
+            item.sellIn -= 1;
             return;
         }
 

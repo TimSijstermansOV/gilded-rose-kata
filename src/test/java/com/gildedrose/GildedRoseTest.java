@@ -24,7 +24,7 @@ public class GildedRoseTest {
                 new Item("someItem", 5, 10),
                 new Item(BRIE, 5, 10),
                 new Item(BACKSTAGE_PASS, 5, 10),
-                new Item("Conjured Sword", 5, 10));
+                new Item(CONJURED + " Sword", 5, 10));
 
         underTest.updateQuality();
 
@@ -119,17 +119,19 @@ public class GildedRoseTest {
     @Test
     public void backstagePass_QualityIncreasesByThree_WhenSellInAtOrBelowFive() {
         GildedRose underTest = createGildedRoseWithItems(
-                new Item(BACKSTAGE_PASS, 5, 10));
+                new Item(BACKSTAGE_PASS, 5, 10),
+                new Item(BACKSTAGE_PASS, 0, 10));
 
         underTest.updateQuality();
 
         assertEquals(13, underTest.items[0].quality);
+        assertEquals(13, underTest.items[1].quality);
     }
 
     @Test
-    public void backstagePass_QualityEqualsZero_WhenSellInAtOrBelowZero() {
+    public void backstagePass_QualityEqualsZero_WhenSellInBelowZero() {
         GildedRose underTest = createGildedRoseWithItems(
-                new Item(BACKSTAGE_PASS, 0, 10));
+                new Item(BACKSTAGE_PASS, -1, 10));
 
         underTest.updateQuality();
 
